@@ -29,6 +29,7 @@ import java.util.List;
 
 public class Main3Activity extends AppCompatActivity {
     EditText startTime,endTime;
+    TextView scheduleupdate;
     Button showTime;
     private TimePickerDialog timePickerDialog;
     int hour;
@@ -179,6 +180,85 @@ public class Main3Activity extends AppCompatActivity {
                 }
 
 
+            }});
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Appliances appliances = applianceList.get(i);
+                final String nameup = appliances.getItemName();
+                final String typeup = appliances.getType();
+//                final String scheduleup = appliances.getSchedule();
+                final String statueup = appliances.getStatus();
+                final String userIdup = appliances.getUserId();
+                AlertDialog.Builder builder = new AlertDialog.Builder (Main3Activity.this);
+                View mview = getLayoutInflater ().inflate (R.layout.scheduledialog11,null);
+
+                startTime = (EditText) mview.findViewById (R.id.edit_start_timea);
+                endTime = (EditText) mview.findViewById (R.id.edit_End_timea);
+                showTime = (Button) mview.findViewById (R.id.showTIMEa);
+                scheduleupdate= (TextView) mview.findViewById(R.id.text);
+                startTime.setOnClickListener (new View.OnClickListener ( ) {
+                    @Override
+                    public void onClick(View view) {
+                        c = Calendar.getInstance ();
+                        hour = c.get (Calendar.HOUR_OF_DAY);
+                        min = c.get (Calendar.MINUTE);
+
+                        timePickerDialog = new TimePickerDialog (Main3Activity.this, new TimePickerDialog.OnTimeSetListener ( ) {
+                            @Override
+                            public void onTimeSet(android.widget.TimePicker timePicker, int i, int i1) {
+                                a =  i+":"+i1;
+                                startTime.setText (a);
+                            }
+
+                        },hour,min,false);
+
+                        timePickerDialog.show ();
+
+                    }
+                });
+
+                endTime.setOnClickListener (new View.OnClickListener ( ) {
+                    @Override
+                    public void onClick(View view) {
+                        c = Calendar.getInstance ( );
+                        hour = c.get (Calendar.HOUR_OF_DAY);
+                        min = c.get (Calendar.MINUTE);
+
+                        timePickerDialog = new TimePickerDialog (Main3Activity.this, new TimePickerDialog.OnTimeSetListener ( ) {
+                            @Override
+                            public void onTimeSet(android.widget.TimePicker timePicker, int i, int i1) {
+                                b=i+":"+i1;
+                                endTime.setText (b);
+                            }
+
+                        }, hour, min, false);
+
+                        timePickerDialog.show ();
+                    }
+                });
+
+                showTime.setOnClickListener (new View.OnClickListener ( ) {
+                    @Override
+                    public void onClick(View view) {
+                        String schedule;
+
+                        scheduleupdate.setText (a+"   to  "+b);
+                        schedule = scheduleupdate.getText().toString();
+                        update(userIdup,statueup,nameup,typeup,schedule);
+                        Toast.makeText (getApplicationContext (),"Schedule is updated to"+ schedule,Toast.LENGTH_SHORT).show ();
+
+
+                    }
+                });
+
+                builder.setView (mview);
+                AlertDialog dialog = builder.create ();
+                dialog.show ();
+
+
+
+                return true;
             }});
 
     }
